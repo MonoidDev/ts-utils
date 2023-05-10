@@ -80,3 +80,37 @@ export function fold<L, R, U, V>(
     }
   };
 }
+
+/**
+ *
+ * @param y
+ * @returns a function that returns its input if the input is left; else return y.
+ * by piping this function, you first judge your given input, then judge y if your input is not left.
+ * useful for chaining validations.
+ */
+export function and<L, R>(
+  y: ResultType<L, R> | (() => ResultType<L, R>)
+): (x: ResultType<L, R>) => ResultType<L, R> {
+  return (x: ResultType<L, R>) => {
+    if (isLeft(x)) {
+      return x;
+    }
+    return y instanceof Function ? y() : y;
+  };
+}
+
+/**
+ *
+ * @param x
+ * @param f
+ * @returns if x is left, apply f to x.left; else return x.
+ */
+export function mapLeft<L, R, U>(
+  x: ResultType<L, R>,
+  f: (x: L) => U
+): ResultType<U, R> {
+  if (isLeft(x)) {
+    return ofLeft(f(x.left));
+  }
+  return x;
+}

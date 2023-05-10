@@ -1,5 +1,7 @@
+import R from "remeda";
+
 import { Result } from ".";
-import { ResultType } from "./Result";
+import { ResultType, fold } from "./Result";
 
 /**
  * A special result that returns a list of human messages when error.
@@ -27,16 +29,18 @@ export function ofRightIf(cond: boolean, x: string[]): StringsResultType {
   return ofLeftIf(!cond, x);
 }
 
-export function mergeEveryLeft(x: StringsResultType[]) {
-  const messages: string[] = [];
-
-  for (const r of x) {
-    if (Result.isLeft(r)) {
-      messages.push(...r.left);
+export function mergeLeft(y: StringsResultType) {
+  return (x: StringsResultType) => {
+    if (Result.isLeft(y)) {
+      return R.pipe(
+        x,
+        fold(
+          (x) => [...x, ...y.left],
+          () => y.left
+        ),
+        ofLeft
+      );
     }
-  }
-
-  if (messages.length) return ofLeft(messages);
-
-  return ofRight();
+    return x;
+  };
 }

@@ -59,4 +59,37 @@ describe("Result", () => {
       )
     ).toBe(2);
   });
+
+  it("and", () => {
+    expect(
+      R.pipe(
+        Result.ofRight<number, number>(1),
+        Result.and(Result.ofRight<number, number>(2))
+      )
+    ).toMatchObject(Result.ofRight<number, number>(2));
+
+    expect(
+      R.pipe(
+        Result.ofRight<number, number>(1),
+        Result.and(Result.ofLeft<number, number>(2)), // Encountering the first left
+        Result.and(Result.ofLeft<number, number>(3)),
+        Result.and(Result.ofLeft<number, number>(4))
+      )
+    ).toMatchObject(Result.ofLeft<number, number>(2));
+
+    expect(
+      R.pipe(
+        Result.ofLeft<number, number>(1),
+        Result.and(Result.ofRight<number, number>(2)),
+        Result.and(Result.ofLeft<number, number>(3))
+      )
+    ).toMatchObject(Result.ofLeft<number, number>(1));
+
+    expect(
+      R.pipe(
+        Result.ofRight<number, number>(1),
+        Result.and(() => Result.ofLeft<number, number>(2))
+      )
+    ).toMatchObject(Result.ofLeft<number, number>(2));
+  });
 });

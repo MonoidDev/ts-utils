@@ -1,0 +1,41 @@
+{
+  "name": "@monoid-dev/ts-utils",
+  "version": "0.0.1",
+  "keywords": [],
+  "type": "commonjs",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "module": "./lib/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "files": [
+    "src/",
+    "lib/"
+  ],
+  "author": "Chenyu Wang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MonoidDev/ts-utils"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup src/index.ts --format esm,cjs --splitting -d lib/ && tsc -p tsconfig.build.json",
+    "lint": "tsc && eslint ./src --ext .ts,.tsx",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "remeda": "^1.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "remeda": "^1.14.0"
+  }
+}
